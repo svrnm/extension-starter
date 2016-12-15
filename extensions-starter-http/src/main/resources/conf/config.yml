@@ -1,0 +1,38 @@
+### ANY CHANGES TO THIS FILE DOES NOT REQUIRE A RESTART ###
+
+#This will create this metric in all the tiers, under this path
+metricPrefix: Custom Metrics|Starter
+
+#This will create it in specific Tier. Replace <TIER_NAME>
+#metricPrefix: Server|Component:<TIER_NAME>|Custom Metrics|Starter
+
+servers:
+  - uri: https://www.appdynamics.com/
+    displayName: AppDynamics
+    username: user
+    password: welcome
+
+  - uri: https://www.yahoo.com/
+    displayName: Yahoo
+    username: user
+    passwordEncrypted: C043Fag+LKEZM0AQTWPy2g==
+
+# number of concurrent tasks
+numberOfThreads: 5
+encryptionKey: welcome
+
+connection:
+  socketTimeout: 2000
+  connectTimeout: 2000
+  sslCertCheckEnabled: false
+  sslVerifyHostname: false
+  sslProtocols: ["TLSv1"]
+
+#proxy:
+#  uri: http://localhost:9090
+#  username: proxyyuser
+#  password: proxypassword
+
+#taskSchedule:
+#  numberOfThreads: 1
+#  taskDelaySeconds: 300
