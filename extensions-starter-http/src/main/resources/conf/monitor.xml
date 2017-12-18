@@ -13,11 +13,11 @@
         <type>java</type>
         <execution-timeout-in-secs>120</execution-timeout-in-secs>
         <task-arguments>
-            <argument name="config-file" is-required="true" default-value="monitors/StarterMonitor/config.yml" />
+            <argument name="config-file" is-required="true" default-value="monitors/Extension-Starter/config.yml" />
         </task-arguments>
         <java-task>
             <classpath>extensions-starter-http.jar</classpath>
-            <impl-class>com.appdynamics.monitors.StarterMonitor</impl-class>
+            <impl-class>com.appdynamics.extensions.ExtStarterMonitor</impl-class>
         </java-task>
     </monitor-run-task>
 </monitor>
