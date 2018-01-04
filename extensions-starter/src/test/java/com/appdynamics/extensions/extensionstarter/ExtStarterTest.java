@@ -20,9 +20,9 @@ import static org.mockito.Mockito.when;
 public class ExtStarterTest{
 
     @Test
-    public void testGoingThroughResultSetWithNormalValues()  {
+    public void testToCheckNumber2()  {
         Assert.assertTrue((1+1) == 2);
 
     }
 
-    }
+}
