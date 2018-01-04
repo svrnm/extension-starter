@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.appdynamics.extensions</groupId>
-    <artifactId>extensions-starter-http</artifactId>
+    <artifactId>extensions-starter</artifactId>
     <version>1.1</version>
     <packaging>jar</packaging>
     <url>http://maven.apache.org</url>
@@ -46,13 +46,13 @@
             <groupId>com.appdynamics</groupId>
             <artifactId>machine-agent</artifactId>
             <version>3.7.11</version>
-            <!--<scope>provided</scope>-->
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
-            <!--<scope>provided</scope>-->
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <!--<version>1.7.12</version>-->
+            <version>1.7.12</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
