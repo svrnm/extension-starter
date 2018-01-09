@@ -3,20 +3,23 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.appdynamics.extensions</groupId>
-    <artifactId>extensions-starter-http</artifactId>
-    <version>1.0.0</version>
+    <artifactId>extensions-starter</artifactId>
+    <version>1.1</version>
     <packaging>jar</packaging>
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+        <target.dir>${project.build.directory}/Extension-Starter</target.dir>
+        <lib.dir>${basedir}/lib</lib.dir>
+
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.appdynamics</groupId>
             <artifactId>appd-exts-commons</artifactId>
-            <version>1.6.5</version>
+            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -73,6 +76,16 @@
             <artifactId>jetty-webapp</artifactId>
             <version>8.1.10.v20130312</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>RELEASE</version>
         </dependency>
     </dependencies>
 
