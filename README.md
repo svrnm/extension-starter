@@ -95,6 +95,6 @@ Always feel free to fork and contribute any changes directly via [GitHub](https:
 Name |	Version
 ---|---
 Extension Version |	1.2.0
-Controller Compatibility	3.7 | or Later
+Controller Compatibility | 3.7 or Later
 Last Update |	06/18/2018
 
