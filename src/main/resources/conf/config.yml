@@ -3,8 +3,9 @@
 #This will create this metric in all the tiers, under this path
 #metricPrefix: Custom Metrics|Starter
 
-#This will create it in specific Tier. Replace <TIER_NAME>
-metricPrefix: Server|Component:<TIER_NAME>|Custom Metrics|Starter
+#This will create it in specific Tier/Component. Make sure to replace <COMPONENT_ID> with the appropriate one from your environment.
+#To find the <COMPONENT_ID> in your environment, please follow the screenshot https://docs.appdynamics.com/display/PRO42/Build+a+Monitoring+Extension+Using+Java
+metricPrefix: Server|Component:<TIER_ID>|Custom Metrics|Starter
 
 servers:
   - uri: https://www.appdynamics.com/
@@ -18,7 +19,7 @@ servers:
     passwordEncrypted: C043Fag+LKEZM0AQTWPy2g==
 
 # number of concurrent tasks
-numberOfThreads: 5
+numberOfThreads: 1
 encryptionKey: welcome
 
 connection:

@@ -14,20 +14,15 @@ package com.appdynamics.extensions.extensionstarter;
 
 import com.appdynamics.extensions.AMonitorTaskRunnable;
 import com.appdynamics.extensions.MetricWriteHelper;
-import com.appdynamics.extensions.conf.MonitorConfiguration;
+import com.appdynamics.extensions.conf.MonitorContextConfiguration;
 import com.appdynamics.extensions.http.UrlBuilder;
-import com.appdynamics.extensions.util.AssertUtils;
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.slf4j.LoggerFactory;
+import com.appdynamics.extensions.logging.ExtensionsLoggerFactory;
+import com.appdynamics.extensions.metrics.Metric;
+import org.slf4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 /*
   The ExtensionMonitorTask(namely "task") needs to implement the interface
@@ -37,51 +32,68 @@ import java.util.concurrent.CountDownLatch;
   "METRICS_COLLECTION_STATUS" or do any other task complete work.
  */
 
+/**
+ * The ExtensionMonitorTask(namely "task") is an instance of {@link Runnable} needs to implement the interface
+ *   {@code AMonitorTaskRunnable} instead of {@code Runnable}. This would make the need for overriding
+ *   {@code onTaskComplete()} method which will be called once the {@code run()} method execution is done.
+ *
+ */
 public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExtStarterMonitorTask.class);
-    private MonitorConfiguration configuration;
+    private static final Logger logger = ExtensionsLoggerFactory.getLogger(ExtStarterMonitorTask.class);
+    private MonitorContextConfiguration configuration;
     private MetricWriteHelper metricWriteHelper;
     private Map<String, String> server;
+    private String metricPrefix;
+    // use below variables as required
     private String serverURL;
     private String clusterName;
     private Map<String, ?> configMap;
     private Map<String, ?> metricsMap;
-    private Boolean status = true;
 
 
-    public ExtStarterMonitorTask(MonitorConfiguration configuration, MetricWriteHelper metricWriteHelper, Map<String, String> server){
+    public ExtStarterMonitorTask(MonitorContextConfiguration configuration, MetricWriteHelper metricWriteHelper, Map<String, String> server){
         this.configuration = configuration;
         this.metricWriteHelper = metricWriteHelper;
         this.server = server;
+        this.metricPrefix = configuration.getMetricPrefix();
         this.serverURL = UrlBuilder.fromYmlServerConfig(server).build();
         this.clusterName = server.get("name");
-        AssertUtils.assertNotNull(clusterName, "Name of the cluster should not be null");
+        // AssertUtils.assertNotNull(clusterName, "Name of the cluster should not be null");
         configMap = configuration.getConfigYml();
         metricsMap = (Map<String, ?>) configMap.get("metrics");
-        AssertUtils.assertNotNull(metricsMap, "The 'metrics' section in config.yml is either null or empty");
+        // AssertUtils.assertNotNull(metricsMap, "The 'metrics' section in config.yml is either null or empty");
     }
 
-
+    /**
+     * This onTaskComplete() method emphasizes the need to print metrics like
+     * "METRICS_COLLECTION_STATUS" or do any other task complete work.
+     */
     @Override
     public void onTaskComplete() {
-        logger.debug("Task Complete");
-        if (status == true) {;
-//            metricWriter.printMetric(metricPrefix + "|" + (String) server.get("displayName"), "1", "AVERAGE", "AVERAGE", "INDIVIDUAL");
-        } else {;
-//            metricWriter.printMetric(metricPrefix + "|" + (String) server.get("displayName"), "0", "AVERAGE", "AVERAGE", "INDIVIDUAL");
-        }
-
+        /*
+         Below code shows an example of how to print metrics
+         */
+        List<Metric> metrics = new ArrayList<>();
+        // this creates a Metric with default properties
+        Metric metric = new Metric("Heart Beat", String.valueOf(1), metricPrefix + "| Heart Beat");
+        metrics.add(metric);
+        metricWriteHelper.transformAndPrintMetrics(metrics);
+        logger.info("Created task and started working for Server: {}", server.get("displayName"));
     }
 
+    /**
+     * This method contains the main business logic of the extension.
+     */
     @Override
     public void run() {
-/*
+        logger.info("Created task and started working for Server: {}", server.get("displayName"));
+        /*
 
-* It is in this function that you can get your metrics and process them and send them to the controller.
-* You can look at the various extensions available on the community site and build your extension based on them.
-*
-* */
+        * It is in this function that you can get your metrics and process them and send them to the controller.
+        * You can look at the various extensions available on the community site and build your extension based on them.
+        *
+        * */
     }
 
 }

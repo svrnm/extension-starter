@@ -29,8 +29,7 @@ public class ExtStarterTest{
 
     @Test
     public void testToCheckNumber2()  {
-        Assert.assertTrue((1+1) == 2);
-
+        Assert.assertEquals((1 + 1), 2);
     }
 
 }

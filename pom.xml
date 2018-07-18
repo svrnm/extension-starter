@@ -12,22 +12,22 @@
 
     <groupId>com.appdynamics.extensions</groupId>
     <artifactId>extensions-starter</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
-    <url>http://maven.apache.org</url>
+
+    <name>extensions-starter</name>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
         <target.dir>${project.build.directory}/Extension-Starter</target.dir>
-        <lib.dir>${basedir}/lib</lib.dir>
-
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.appdynamics</groupId>
             <artifactId>appd-exts-commons</artifactId>
-            <version>2.0.1</version>
+            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -72,12 +72,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>1.7.12</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -153,7 +147,7 @@
                 <executions>
                     <execution>
                         <id>install</id>
-                        <phase>package</phase>
+                        <phase>install</phase>
                         <configuration>
                             <target>
                                 <property name="target.dir" value="${project.build.directory}/StarterMonitor"/>
@@ -168,7 +162,7 @@
                                     <fileset dir="${project.build.directory}" includes="${project.artifactId}.${project.packaging}"/>
                                 </copy>
                                 <zip destfile="${target.dir}-${project.version}.zip">
-                                    <zipfileset dir="${target.dir}" filemode="755" prefix="StarterMonitor"/>
+                                    <zipfileset dir="${target.dir}" filemode="755" prefix="ExtensionStarterMonitor"/>
                                 </zip>
                                 <delete dir="${target.dir}"/>
                             </target>
