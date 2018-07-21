@@ -9,28 +9,22 @@
 package com.appdynamics.extensions.extensionstarter;
 
 /**
- * Created by bhuvnesh.kumar on 12/15/17.
+ *Created by bhuvnesh.kumar on 12/15/17.
  */
 
 import com.appdynamics.extensions.AMonitorTaskRunnable;
 import com.appdynamics.extensions.MetricWriteHelper;
 import com.appdynamics.extensions.conf.MonitorContextConfiguration;
-import com.appdynamics.extensions.http.UrlBuilder;
 import com.appdynamics.extensions.logging.ExtensionsLoggerFactory;
 import com.appdynamics.extensions.metrics.Metric;
 import org.slf4j.Logger;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/*
-  The ExtensionMonitorTask(namely "task") needs to implement the interface
-  AMonitorTaskRunnable instead of Runnable. This would make the need for overriding
-  onTaskComplete() method which will be called once the run() method execution is done.
-  This onTaskComplete() method emphasizes the need to print metrics like
-  "METRICS_COLLECTION_STATUS" or do any other task complete work.
- */
+import static com.appdynamics.extensions.extensionstarter.util.Constants.*;
 
 /**
  * The ExtensionMonitorTask(namely "task") is an instance of {@link Runnable} needs to implement the interface
@@ -46,22 +40,23 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
     private Map<String, String> server;
     private String metricPrefix;
     // use below variables as required
-    private String serverURL;
-    private String clusterName;
-    private Map<String, ?> configMap;
-    private Map<String, ?> metricsMap;
+    // private String serverURL;
+    // private String clusterName;
+    // private Map<String, ?> configMap;
+    // private Map<String, ?> metricsMap;
 
 
-    public ExtStarterMonitorTask(MonitorContextConfiguration configuration, MetricWriteHelper metricWriteHelper, Map<String, String> server){
+    public ExtStarterMonitorTask(MonitorContextConfiguration configuration, MetricWriteHelper metricWriteHelper,
+                                 Map<String, String> server){
         this.configuration = configuration;
         this.metricWriteHelper = metricWriteHelper;
         this.server = server;
         this.metricPrefix = configuration.getMetricPrefix();
-        this.serverURL = UrlBuilder.fromYmlServerConfig(server).build();
-        this.clusterName = server.get("name");
+        // this.serverURL = UrlBuilder.fromYmlServerConfig(server).build();
+        // this.clusterName = server.get("name");
         // AssertUtils.assertNotNull(clusterName, "Name of the cluster should not be null");
-        configMap = configuration.getConfigYml();
-        metricsMap = (Map<String, ?>) configMap.get("metrics");
+        // configMap = configuration.getConfigYml();
+        // metricsMap = (Map<String, ?>) configMap.get("metrics");
         // AssertUtils.assertNotNull(metricsMap, "The 'metrics' section in config.yml is either null or empty");
     }
 
@@ -76,7 +71,8 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
          */
         List<Metric> metrics = new ArrayList<>();
         // this creates a Metric with default properties
-        Metric metric = new Metric("Heart Beat", String.valueOf(1), metricPrefix + "| Heart Beat");
+        Metric metric = new Metric("Heart Beat", String.valueOf(BigInteger.ONE), metricPrefix
+                + DEFAULT_METRIC_SEPARATOR + " Heart Beat");
         metrics.add(metric);
         metricWriteHelper.transformAndPrintMetrics(metrics);
         logger.info("Created task and started working for Server: {}", server.get("displayName"));
@@ -94,6 +90,44 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
         * You can look at the various extensions available on the community site and build your extension based on them.
         *
         * */
+
+        /*
+        once you have collected the required metrics you can send them to the metric browser as shown in the below
+        example. In this example, let's assume that you have pulled a metric called CPU Utilization, refer config.yml
+        to configure what metrics you need to collect, you will create a metric object and add it to a list. The list
+        hold all the metric object and using the method shown in example you can send all the metrics to the metric
+        browser.
+        NOTE: the underlying piece of code is designed to handle the specific way in which the 'metrics' section
+        of config.yml is structured, please modify it according to your structure definition in config.yml
+         */
+        // get list of metrics to pull from 'metrics' section in config.yml
+        List<Map<String,?>> metricList = (List<Map<String, ?>>) configuration.getConfigYml().get(METRICS);
+        // iterate through all the metrics and add them to a list
+        List<Metric> metrics = new ArrayList<>();
+        for (Map<String, ?> metricType: metricList){
+            for (Map.Entry<String, ?> entry: metricType.entrySet()) {
+                logger.info("Building metric for {}", entry.getKey());
+                // get details of the specific metric, in this example 'CPUUtilization' section in config.yml
+                Map<String, ?> metricProperties = (Map<String, ?>) entry.getValue();
+                buildMetrics(metrics, metricProperties);
+            }
+        }
+        metricWriteHelper.transformAndPrintMetrics(metrics);
+    }
+
+    /**
+     * Creates a {@code Metric} object and add it to the {@code List<Metrics>}
+     * @param metrics A {@code List<Metric>} updated by the method
+     * @param metricProperties Properties of the metric type
+     */
+    private void buildMetrics(List<Metric> metrics, Map<String, ?> metricProperties) {
+        String alias = (String) metricProperties.get("alias");
+        // this example uses a hardcoded value (20),
+        // use the value that you get for your metrics, you can modify the method signature to
+        // pass the actual value of the metric
+        // You can look at the various extensions available on the community site for further understanding
+        Metric metric = new Metric(alias, String.valueOf(20), metricPrefix + "| " + alias, metricProperties);
+        metrics.add(metric);
     }
 
 }
