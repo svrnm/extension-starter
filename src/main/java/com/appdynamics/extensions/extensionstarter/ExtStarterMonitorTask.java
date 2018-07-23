@@ -17,6 +17,7 @@ import com.appdynamics.extensions.MetricWriteHelper;
 import com.appdynamics.extensions.conf.MonitorContextConfiguration;
 import com.appdynamics.extensions.logging.ExtensionsLoggerFactory;
 import com.appdynamics.extensions.metrics.Metric;
+import com.appdynamics.extensions.util.AssertUtils;
 import org.slf4j.Logger;
 
 import java.math.BigInteger;
@@ -39,11 +40,11 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
     private MetricWriteHelper metricWriteHelper;
     private Map<String, String> server;
     private String metricPrefix;
+    private List<Map<String,?>> metricList;
     // use below variables as required
     // private String serverURL;
     // private String clusterName;
     // private Map<String, ?> configMap;
-    // private Map<String, ?> metricsMap;
 
 
     public ExtStarterMonitorTask(MonitorContextConfiguration configuration, MetricWriteHelper metricWriteHelper,
@@ -52,12 +53,12 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
         this.metricWriteHelper = metricWriteHelper;
         this.server = server;
         this.metricPrefix = configuration.getMetricPrefix();
+        this.metricList = (List<Map<String, ?>>) configuration.getConfigYml().get(METRICS);
+        AssertUtils.assertNotNull(this.metricList, "The 'metrics' section in config.yml is either null or empty");
         // this.serverURL = UrlBuilder.fromYmlServerConfig(server).build();
         // this.clusterName = server.get("name");
         // AssertUtils.assertNotNull(clusterName, "Name of the cluster should not be null");
         // configMap = configuration.getConfigYml();
-        // metricsMap = (Map<String, ?>) configMap.get("metrics");
-        // AssertUtils.assertNotNull(metricsMap, "The 'metrics' section in config.yml is either null or empty");
     }
 
     /**
@@ -75,7 +76,7 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
                 + DEFAULT_METRIC_SEPARATOR + " Heart Beat");
         metrics.add(metric);
         metricWriteHelper.transformAndPrintMetrics(metrics);
-        logger.info("Created task and started working for Server: {}", server.get("displayName"));
+        logger.info("Completed task for Server: {}", server.get("name"));
     }
 
     /**
@@ -83,9 +84,8 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
      */
     @Override
     public void run() {
-        logger.info("Created task and started working for Server: {}", server.get("displayName"));
+        logger.info("Created task and started working for Server: {}", server.get("name"));
         /*
-
         * It is in this function that you can get your metrics and process them and send them to the controller.
         * You can look at the various extensions available on the community site and build your extension based on them.
         *
@@ -101,7 +101,6 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
         of config.yml is structured, please modify it according to your structure definition in config.yml
          */
         // get list of metrics to pull from 'metrics' section in config.yml
-        List<Map<String,?>> metricList = (List<Map<String, ?>>) configuration.getConfigYml().get(METRICS);
         // iterate through all the metrics and add them to a list
         List<Metric> metrics = new ArrayList<>();
         for (Map<String, ?> metricType: metricList){
@@ -126,7 +125,7 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
         // use the value that you get for your metrics, you can modify the method signature to
         // pass the actual value of the metric
         // You can look at the various extensions available on the community site for further understanding
-        Metric metric = new Metric(alias, String.valueOf(20), metricPrefix + "| " + alias, metricProperties);
+        Metric metric = new Metric(alias, String.valueOf(20), metricPrefix + "|" + alias, metricProperties);
         metrics.add(metric);
     }
 

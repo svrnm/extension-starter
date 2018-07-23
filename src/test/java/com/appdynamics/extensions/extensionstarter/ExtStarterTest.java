@@ -8,29 +8,58 @@
 
 package com.appdynamics.extensions.extensionstarter;
 
+import com.appdynamics.extensions.AMonitorJob;
+import com.appdynamics.extensions.MetricWriteHelper;
+import com.appdynamics.extensions.conf.MonitorContextConfiguration;
 
 import com.appdynamics.extensions.metrics.Metric;
-import com.appdynamics.extensions.yml.YmlReader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static com.appdynamics.extensions.extensionstarter.util.Constants.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ExtStarterTest{
 
-    //TODO add test case to check CPUUtilization, use ArgumentCaptor
-    @Test
-    public void testToCheckNumber2()  {
-        Assert.assertEquals((1 + 1), 2);
+    @Mock
+    private MetricWriteHelper metricWriteHelper;
+    private MonitorContextConfiguration monitorContextConfiguration;
+    private Map<String, String> servers;
+
+    /**
+     * Initialize resources common to all tests
+     */
+    @Before
+    public void setup() {
+        monitorContextConfiguration = new MonitorContextConfiguration(MONITOR_NAME, DEFAULT_METRIC_PREFIX,
+                Mockito.mock(File.class), Mockito.mock(AMonitorJob.class));
+        monitorContextConfiguration.setConfigYml("src/test/resources/conf/config.yml");
+        servers = new HashMap<>();
+        servers.put("host", "localhost");
+        servers.put("name", "localhost");
     }
 
+    @Test
+    public void extStarterMonitorTaskTest() {
+        ArgumentCaptor<List> metricCaptor = ArgumentCaptor.forClass(List.class);
+        ExtStarterMonitorTask task = new ExtStarterMonitorTask(monitorContextConfiguration, metricWriteHelper, servers);
+        task.run();
+        Mockito.verify(metricWriteHelper).transformAndPrintMetrics(metricCaptor.capture());
+        for (Metric metric: (List<Metric>) metricCaptor.getValue()){
+            Assert.assertEquals(metric.getMetricPath(), "Server|Component:<TIER_ID>|Custom Metrics|Starter|" +
+                    "CPU Utilization");
+            Assert.assertEquals(metric.getMetricValue(), "20");
+        }
+    }
 }

@@ -8,13 +8,13 @@
 metricPrefix: Server|Component:<TIER_ID>|Custom Metrics|Starter
 
 servers:
-  - uri: https://www.appdynamics.com/
-    displayName: AppDynamics
+  - host: https://www.appdynamics.com/
+    name: AppDynamics
     username: user
     password: welcome
 
-  - uri: https://www.yahoo.com/
-    displayName: Yahoo
+  - host: https://www.yahoo.com/
+    name: Yahoo
     username: user
     passwordEncrypted: C043Fag+LKEZM0AQTWPy2g==
 
