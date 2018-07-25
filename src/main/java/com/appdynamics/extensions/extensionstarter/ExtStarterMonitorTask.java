@@ -15,10 +15,10 @@ package com.appdynamics.extensions.extensionstarter;
 import com.appdynamics.extensions.AMonitorTaskRunnable;
 import com.appdynamics.extensions.MetricWriteHelper;
 import com.appdynamics.extensions.conf.MonitorContextConfiguration;
-import com.appdynamics.extensions.logging.ExtensionsLoggerFactory;
 import com.appdynamics.extensions.metrics.Metric;
 import com.appdynamics.extensions.util.AssertUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import static com.appdynamics.extensions.extensionstarter.util.Constants.*;
  */
 public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
 
-    private static final Logger logger = ExtensionsLoggerFactory.getLogger(ExtStarterMonitorTask.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExtStarterMonitorTask.class);
     private MonitorContextConfiguration configuration;
     private MetricWriteHelper metricWriteHelper;
     private Map<String, String> server;

@@ -14,9 +14,9 @@ package com.appdynamics.extensions.extensionstarter;
 
 import com.appdynamics.extensions.ABaseMonitor;
 import com.appdynamics.extensions.TasksExecutionServiceProvider;
-import com.appdynamics.extensions.logging.ExtensionsLoggerFactory;
 import com.appdynamics.extensions.util.AssertUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -41,7 +41,7 @@ import static com.appdynamics.extensions.extensionstarter.util.Constants.*;
  */
 public class ExtStarterMonitor extends ABaseMonitor {
 
-    private static final Logger logger = ExtensionsLoggerFactory.getLogger(ExtStarterMonitor.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExtStarterMonitor.class);
 
     /**
      * Returns the default metric prefix defined in {@code Constants} to be used if metric prefix
