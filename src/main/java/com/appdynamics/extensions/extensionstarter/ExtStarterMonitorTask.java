@@ -9,7 +9,7 @@
 package com.appdynamics.extensions.extensionstarter;
 
 /**
- *Created by bhuvnesh.kumar on 12/15/17.
+ * Created by bhuvnesh.kumar on 12/15/17.
  */
 
 import com.appdynamics.extensions.AMonitorTaskRunnable;
@@ -33,32 +33,24 @@ import static com.appdynamics.extensions.extensionstarter.util.Constants.*;
  *   {@code onTaskComplete()} method which will be called once the {@code run()} method execution is done.
  *
  */
-public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
+public class ExtStarterMonitorTask implements AMonitorTaskRunnable {
 
     private static final Logger logger = LoggerFactory.getLogger(ExtStarterMonitorTask.class);
     private MonitorContextConfiguration configuration;
     private MetricWriteHelper metricWriteHelper;
     private Map<String, String> server;
     private String metricPrefix;
-    private List<Map<String,?>> metricList;
-    // use below variables as required
-    // private String serverURL;
-    // private String clusterName;
-    // private Map<String, ?> configMap;
+    private List<Map<String, ?>> metricList;
 
 
     public ExtStarterMonitorTask(MonitorContextConfiguration configuration, MetricWriteHelper metricWriteHelper,
-                                 Map<String, String> server){
+                                 Map<String, String> server) {
         this.configuration = configuration;
         this.metricWriteHelper = metricWriteHelper;
         this.server = server;
         this.metricPrefix = configuration.getMetricPrefix();
         this.metricList = (List<Map<String, ?>>) configuration.getConfigYml().get(METRICS);
         AssertUtils.assertNotNull(this.metricList, "The 'metrics' section in config.yml is either null or empty");
-        // this.serverURL = UrlBuilder.fromYmlServerConfig(server).build();
-        // this.clusterName = server.get("name");
-        // AssertUtils.assertNotNull(clusterName, "Name of the cluster should not be null");
-        // configMap = configuration.getConfigYml();
     }
 
     /**
@@ -86,10 +78,10 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
     public void run() {
         logger.info("Created task and started working for Server: {}", server.get("name"));
         /*
-        * It is in this function that you can get your metrics and process them and send them to the controller.
-        * You can look at the various extensions available on the community site and build your extension based on them.
-        *
-        * */
+         * It is in this function that you can get your metrics and process them and send them to the controller.
+         * You can look at the various extensions available on the community site and build your extension based on them.
+         *
+         * */
 
         /*
         once you have collected the required metrics you can send them to the metric browser as shown in the below
@@ -103,8 +95,8 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
         // get list of metrics to pull from 'metrics' section in config.yml
         // iterate through all the metrics and add them to a list
         List<Metric> metrics = new ArrayList<>();
-        for (Map<String, ?> metricType: metricList){
-            for (Map.Entry<String, ?> entry: metricType.entrySet()) {
+        for (Map<String, ?> metricType : metricList) {
+            for (Map.Entry<String, ?> entry : metricType.entrySet()) {
                 logger.info("Building metric for {}", entry.getKey());
                 // get details of the specific metric, in this example 'CPUUtilization' section in config.yml
                 Map<String, ?> metricProperties = (Map<String, ?>) entry.getValue();
@@ -125,7 +117,8 @@ public class ExtStarterMonitorTask implements AMonitorTaskRunnable{
         // use the value that you get for your metrics, you can modify the method signature to
         // pass the actual value of the metric
         // You can look at the various extensions available on the community site for further understanding
-        Metric metric = new Metric(alias, String.valueOf(20), metricPrefix + "|" + alias, metricProperties);
+        Metric metric = new Metric(alias, String.valueOf(20), metricPrefix + DEFAULT_METRIC_SEPARATOR + alias,
+                metricProperties);
         metrics.add(metric);
     }
 
