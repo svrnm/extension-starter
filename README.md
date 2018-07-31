@@ -20,7 +20,7 @@ Please place the extension in the "__monitors__" directory of your __Machine Age
 Configure the extension by editing the `config.yml` file in `<MACHINE_AGENT_HOME>/monitors/<YourExtension>/`
 1. Configure the "tier" under which the metrics need to be reported. This can be done by changing the value of `<TIER ID>` in
 
-     `metricPrefix: "Server|Component:&lt;TIER ID&gt;|Custom Metrics|&lt;YourExtensionName&gt;"`
+     `metricPrefix: "Server|Component:<TIER ID>|Custom Metrics|<YourExtensionName>"`
 
 2. Configure the instances you want to monitor with all required fields.<br/>For example,
  
@@ -43,10 +43,10 @@ Configure the extension by editing the `config.yml` file in `<MACHINE_AGENT_HOME
     ```
  4. Configure the `numberOfThreads` depending on the number of concurrent tasks. For example, if you are monitoring three instances, and each task for each server runs as a single thread then use `numberOfThreads: 3`.
  5. Configure the metrics section. You can look at [Redis Monitoring Extension](https://github.com/Appdynamics/redis-monitoring-extension) `config.yml` for reference.
- 6. Configure the path to the `config.yml` file by editing the in the `monitor.xml` file in the <MACHINE_AGENT_HOME>/monitors/SolrMonitor/&lt;YourExtension&gt;/ directory. Below is the sample,
+ 6. Configure the path to the `config.yml` file by editing the `<task-arguments>` in the `monitor.xml` file in the `<MACHINE_AGENT_HOME>/monitors/SolrMonitor/<YourExtension>/` directory. Below is the sample,
     ```
     <task-arguments>
-            <argument name="config-file" is-required="true" default-value="monitors/&lt;YourExtension&gt;/config.yml" />
+            <argument name="config-file" is-required="true" default-value="monitors/<YourExtension>/config.yml" />
     </task-arguments>
     ```
  
@@ -101,3 +101,4 @@ Extension Version |	1.2.0
 Controller Compatibility | 3.7 or Later
 Last Update |	06/18/2018
 
+List of Changes to this extension can be found [here](../master/Changelog.md)
